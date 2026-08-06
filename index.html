@@ -547,6 +547,30 @@ body {
   margin: 0.7rem 0 0;
 }
 
+.rsvp-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+  padding: 1.2rem 0.5rem;
+  color: var(--sand-2);
+}
+
+.rsvp-success svg {
+  width: 40px;
+  height: 40px;
+  padding: 0.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.rsvp-success p {
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin: 0;
+}
+
 .form-error {
   font-size: 0.8rem;
   color: var(--gold-bright);
@@ -653,7 +677,7 @@ footer {
       <div class="rsvp-card">
         <p class="section-label">Confirmação</p>
         <p class="rsvp-title">Você vem?</p>
-        <p class="rsvp-copy">Preenche rapidinho — sua confirmação nos ajuda a preparar tudo com carinho pra te receber direitinho. Ao tocar em confirmar, abre o WhatsApp com uma mensagem pronta pra você só enviar.</p>
+        <p class="rsvp-copy">Preenche rapidinho — sua confirmação nos ajuda a preparar tudo com carinho pra te receber direitinho.</p>
 
         <form id="rsvp-form" novalidate>
           <div class="field">
@@ -693,12 +717,16 @@ footer {
             </select>
           </div>
           <p class="form-error" id="form-error"></p>
-          <button class="rsvp-submit" type="submit">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.06-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm5.2 14.24c-.22.6-1.28 1.15-1.76 1.2-.45.05-.9.24-3.03-.63-2.57-1.06-4.22-3.65-4.35-3.82-.13-.17-1.04-1.38-1.04-2.64 0-1.25.66-1.86.89-2.12.23-.25.5-.32.67-.32h.48c.15 0 .36-.06.56.43.22.53.75 1.83.81 1.96.06.13.1.29.02.46-.08.17-.13.28-.25.43-.13.15-.27.34-.38.46-.13.13-.26.28-.11.55.15.27.66 1.1 1.42 1.78.98.87 1.8 1.14 2.07 1.27.27.13.43.11.6-.07.17-.18.7-.82.89-1.1.19-.27.38-.23.63-.14.26.1 1.63.77 1.9.91.28.14.46.21.53.32.07.12.07.68-.15 1.28Z"/></svg>
-            Confirmar no WhatsApp
+          <button class="rsvp-submit" type="submit" id="rsvp-submit-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            Confirmar presença
           </button>
-          <p class="rsvp-hint">Vamos abrir o WhatsApp com tudo já preenchido</p>
+          <p class="rsvp-hint">Sua confirmação é registrada na hora</p>
         </form>
+        <div class="rsvp-success" id="rsvp-success" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <p>Recebido! Já anotei sua confirmação por aqui. Obrigado 🦁</p>
+        </div>
       </div>
     </div>
     <div class="section reveal">
@@ -816,10 +844,12 @@ footer {
     if (e.key === 'Escape' && lightboxEl.classList.contains('is-open')) closeLightbox();
   });
 
-  // RSVP -> WhatsApp
+  // RSVP -> banco de dados local do Dante (API própria, não WhatsApp)
+  var RSVP_API = 'https://divide-income-narrow-banana.trycloudflare.com/rsvp';
   var form = document.getElementById('rsvp-form');
   var errorEl = document.getElementById('form-error');
-  var HOST_PHONE = '5571993598752';
+  var submitBtn = document.getElementById('rsvp-submit-btn');
+  var successEl = document.getElementById('rsvp-success');
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -835,17 +865,26 @@ footer {
     }
     errorEl.textContent = '';
 
-    var statusCode = { 'Vou, com certeza!': 'SIM', 'Ainda não sei': 'TALVEZ', 'Não vou conseguir ir': 'NAO' }[going] || 'TALVEZ';
+    var statusCode = { 'Vou, com certeza!': 'sim', 'Ainda não sei': 'talvez', 'Não vou conseguir ir': 'nao' }[going] || 'talvez';
 
-    var lines = [
-      'RSVP: ' + statusCode,
-      'Festa do Israel Nilo 🦁',
-      'Nome: ' + name,
-      'Adultos: ' + adults + ' · Crianças: ' + kids
-    ];
-    var text = encodeURIComponent(lines.join('\n'));
-    var url = 'https://wa.me/' + HOST_PHONE + '?text=' + text;
-    window.open(url, '_blank', 'noopener');
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+
+    fetch(RSVP_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: name, adultos: adults, criancas: kids, indo: statusCode })
+    })
+      .then(function (r) { if (!r.ok) throw new Error('falhou'); return r.json(); })
+      .then(function () {
+        form.hidden = true;
+        successEl.hidden = false;
+      })
+      .catch(function () {
+        errorEl.textContent = 'Não consegui enviar agora — tenta de novo em instantes, ou chama no WhatsApp.';
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+      });
   });
 })();
 </script>
