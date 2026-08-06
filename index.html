@@ -53,58 +53,64 @@
 }
 
 :root {
-  --sand: #FCEBC4;
-  --sand-2: #FFF8E9;
-  --terracotta: #C8451A;
-  --terracotta-dim: #9c3313;
-  --gold: #EF9F1C;
-  --gold-bright: #FFC145;
-  --olive: #6FA83D;
-  --olive-dim: #4B7A28;
-  --simba: #E2600F;
-  --simba-dim: #A83815;
-  --dusk: #2C1D14;
-  --ink: #2C1D14;
-  --ink-soft: #5c4a3a;
-  --line: rgba(44, 29, 20, 0.14);
+  --sand: #FFF4D6;
+  --sand-2: #FFFFFF;
+  --terracotta: #FF6A1A;
+  --terracotta-dim: #D6480A;
+  --gold: #FFC72C;
+  --gold-bright: #FFD65C;
+  --olive: #2FAE3E;
+  --olive-dim: #1F7A2A;
+  --simba: #FF7A1A;
+  --simba-dim: #E85D04;
+  --blue: #1E88E5;
+  --blue-dim: #145A96;
+  --dusk: #16324F;
+  --ink: #16324F;
+  --ink-soft: #4C6B85;
+  --line: rgba(22, 50, 79, 0.14);
   --card: var(--sand-2);
-  --shadow: rgba(44, 22, 10, 0.18);
+  --shadow: rgba(22, 50, 79, 0.18);
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --sand: #211d34;
-  --sand-2: #2b2542;
-  --ink: #f7ead0;
-  --ink-soft: #cabfdb;
-  --dusk: #f7ead0;
-  --line: rgba(247, 234, 208, 0.16);
-  --card: #2b2542;
-  --gold: #f0ab3a;
-  --gold-bright: #ffc65c;
-  --terracotta: #e87a44;
-  --olive: #9fc26e;
-  --simba: #ef7a2e;
-  --simba-dim: #b1451c;
+  --sand: #0E2338;
+  --sand-2: #123049;
+  --ink: #FFF4D6;
+  --ink-soft: #C9D8E3;
+  --dusk: #16324F;
+  --line: rgba(255, 244, 214, 0.16);
+  --card: #123049;
+  --gold: #FFC72C;
+  --gold-bright: #FFD65C;
+  --terracotta: #FF8A3D;
+  --olive: #4FCF5E;
+  --simba: #FF8A3D;
+  --simba-dim: #D6480A;
+  --blue: #4FA8E8;
+  --blue-dim: #2E7FC0;
   --shadow: rgba(0, 0, 0, 0.45);
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --sand: #211d34;
-    --sand-2: #2b2542;
-    --ink: #f7ead0;
-    --ink-soft: #cabfdb;
-    --dusk: #f7ead0;
-    --line: rgba(247, 234, 208, 0.16);
-    --card: #2b2542;
-    --gold: #f0ab3a;
-    --gold-bright: #ffc65c;
-    --terracotta: #e87a44;
-    --olive: #9fc26e;
-    --simba: #ef7a2e;
-    --simba-dim: #b1451c;
+    --sand: #0E2338;
+    --sand-2: #123049;
+    --ink: #FFF4D6;
+    --ink-soft: #C9D8E3;
+    --dusk: #16324F;
+    --line: rgba(255, 244, 214, 0.16);
+    --card: #123049;
+    --gold: #FFC72C;
+    --gold-bright: #FFD65C;
+    --terracotta: #FF8A3D;
+    --olive: #4FCF5E;
+    --simba: #FF8A3D;
+    --simba-dim: #D6480A;
+    --blue: #4FA8E8;
+    --blue-dim: #2E7FC0;
     --shadow: rgba(0, 0, 0, 0.45);
     color-scheme: dark;
   }
@@ -403,7 +409,7 @@ body {
   width: 16px;
   height: 16px;
   transform: translate(-50%, -50%);
-  background: var(--terracotta);
+  background: var(--blue);
   border-radius: 50%;
   border: 3px solid var(--sand-2);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
@@ -434,7 +440,7 @@ body {
   margin-top: 0.35rem;
   font-size: 0.84rem;
   font-weight: 600;
-  color: var(--terracotta);
+  color: var(--blue);
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
@@ -515,7 +521,7 @@ body {
   border: none;
   border-radius: 12px;
   padding: 0.95rem 1rem;
-  background: linear-gradient(135deg, #FFD65C 0%, #FFB020 100%);
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
   color: var(--dusk);
   font-family: 'Archivo', sans-serif;
   font-weight: 700;
@@ -529,7 +535,7 @@ body {
   margin-top: 0.4rem;
 }
 
-.rsvp-submit:hover { background: linear-gradient(135deg, #FFC145 0%, #EF9F1C 100%); transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5); }
+.rsvp-submit:hover { background: linear-gradient(135deg, var(--gold) 0%, var(--terracotta) 100%); transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5); }
 .rsvp-submit:active { transform: translateY(0); }
 .rsvp-submit:focus-visible { outline: 3px solid var(--sand-2); outline-offset: 2px; }
 .rsvp-submit svg { width: 18px; height: 18px; }
